@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Futsal Time Tracker V5</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header>
+  <div class="brand">Futsal <span>Time Tracker</span></div>
+  <nav>
+    <button class="nav-btn active" data-view="teamsView">Equipa</button>
+    <button class="nav-btn" data-view="setupView">Novo Jogo</button>
+    <button class="nav-btn" data-view="matchView">Jogo</button>
+    <button class="nav-btn" data-view="historyView">Histórico</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- EQUIPA -->
+<section id="teamsView" class="view active">
+  <div class="grid two">
+    <div class="card">
+      <h2>Criar equipa</h2>
+      <div class="row">
+        <div class="field flex">
+          <label>Nome</label>
+          <input id="teamNameInput" placeholder="Ex.: Filipa de Lencastre">
+        </div>
+        <div style="align-self:end">
+          <button id="createTeamBtn" class="primary">Criar</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Equipas guardadas</h2>
+      <div id="teamsList"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:15px">
+    <div class="row space">
+      <div>
+        <h2 id="editingTeamTitle">Seleciona uma equipa</h2>
+        <div class="small muted">Os tempos individuais são registados apenas para esta equipa.</div>
+      </div>
+      <button id="deleteTeamBtn" class="danger hidden">Eliminar equipa</button>
+    </div>
+
+    <div id="playerEditorArea" class="hidden">
+      <div class="grid three" style="margin:14px 0">
+        <div class="field">
+          <label>Número</label>
+          <input id="playerNumber" type="number" min="1" max="99">
+        </div>
+        <div class="field">
+          <label>Nome</label>
+          <input id="playerName" placeholder="Nome do atleta">
+        </div>
+        <div class="field">
+          <label>Posição</label>
+          <select id="playerPosition">
+            <option value="Jogador">Jogador</option>
+            <option value="GR">GR</option>
+          </select>
+        </div>
+      </div>
+      <button id="addPlayerBtn" class="primary">Adicionar jogador</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Nome</th><th>Posição</th><th></th></tr></thead>
+          <tbody id="playersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOVO JOGO -->
+<section id="setupView" class="view">
+  <div class="card">
+    <h2>Novo jogo</h2>
+    <div class="grid three">
+      <div class="field">
+        <label>Equipa acompanhada</label>
+        <select id="trackedTeamSelect"></select>
+      </div>
+      <div class="field">
+        <label>Adversário</label>
+        <input id="opponentNameInput" placeholder="Ex.: Sporting CP">
+      </div>
+      <div class="field">
+        <label>Competição</label>
+        <input id="competitionInput" placeholder="1ª Divisão Distrital">
+      </div>
+      <div class="field">
+        <label>Data</label>
+        <input id="matchDateInput" type="date">
+      </div>
+      <div class="field">
+        <label>Modo do relógio</label>
+        <select id="clockModeSelect">
+          <option value="countup">Corrido — tempo para cima</option>
+          <option value="countdown">Cronometrado — tempo para baixo</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Duração da parte (modo cronometrado)</label>
+        <input id="periodMinutesInput" type="number" value="20" min="1" max="60">
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="grid two">
+      <div>
+        <div class="section-title">
+          <h3>Convocados</h3>
+          <span class="badge">jogadores disponíveis</span>
+        </div>
+        <div id="rosterChecks" class="roster-checks"></div>
+      </div>
+      <div>
+        <div class="section-title">
+          <h3>Cinco inicial</h3>
+          <span class="badge">exatamente 5</span>
+        </div>
+        <div id="starterChecks" class="roster-checks"></div>
+      </div>
+    </div>
+
+    <div style="margin-top:15px">
+      <button id="createMatchBtn" class="primary">Criar jogo</button>
+    </div>
+  </div>
+</section>
+
+<!-- JOGO -->
+<section id="matchView" class="view">
+  <div id="noMatchNotice" class="card notice">Ainda não existe um jogo ativo.</div>
+
+  <div id="matchArea" class="hidden">
+    <div class="card">
+      <div class="top-match">
+        <div>
+          <div id="trackedTeamName" class="team-name">Equipa</div>
+          <div id="trackedScore" class="score">0</div>
+        </div>
+
+        <div>
+          <div id="clock" class="clock">00:00</div>
+          <div id="clockMeta" class="clock-meta">1ª Parte</div>
+
+          <div class="row" style="justify-content:center">
+            <button id="toggleClockBtn" class="good" style="min-width:120px">Iniciar</button>
+            <button id="resumeBtn" class="good hidden" style="min-width:120px">Retomar</button>
+            <button id="periodControlBtn" style="min-width:150px">Terminar 1ª parte</button>
+            <button id="finishMatchBtn" class="danger" style="min-width:135px">Terminar jogo</button>
+          </div>
+
+          <div id="timeoutStrip" class="timeout-strip"></div>
+        </div>
+
+        <div>
+          <div id="opponentName" class="team-name">Adversário</div>
+          <div id="opponentScore" class="score">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="workspace">
+
+      <!-- LEFT: TIMES ALWAYS VISIBLE -->
+      <div class="card">
+        <div class="row space" style="margin-bottom:12px">
+          <div>
+            <h2 style="margin:0">Tempos dos jogadores</h2>
+            <div class="small muted">Substituição: clica num jogador em campo e depois num do banco.</div>
+          </div>
+          <span id="modeBadge" class="badge mode-badge">Modo</span>
+        </div>
+
+        <div class="player-columns">
+          <div>
+            <div class="section-title">
+              <h3>Em campo</h3>
+              <span id="courtCount" class="badge">5 jogadores</span>
+            </div>
+            <div id="courtPlayers" class="player-list"></div>
+          </div>
+
+          <div>
+            <div class="section-title">
+              <h3>Banco</h3>
+              <span class="badge">tempo fora</span>
+            </div>
+            <div id="benchPlayers" class="player-list"></div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Jogador</th>
+                <th>Estado</th>
+                <th>Estado atual</th>
+                <th>Acum. campo</th>
+                <th>Acum. fora</th>
+              </tr>
+            </thead>
+            <tbody id="timeSummaryBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RIGHT: ACTIONS ALWAYS VISIBLE -->
+      <div class="workspace-right">
+        <div class="card">
+          <h2>Ações</h2>
+
+          <div class="team-actions-title" id="ourActionsTitle">Nossa equipa</div>
+          <div class="actions">
+            <button data-side="tracked" data-event="Golo">Golo</button>
+            <button data-side="tracked" data-event="Remate">Remate</button>
+            <button data-side="tracked" data-event="Remate enquadrado">Remate enquadrado</button>
+            <button data-side="tracked" data-event="Falta">Falta</button>
+            <button class="timeout-btn warning" data-timeout-side="tracked">Timeout</button>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="team-actions-title" id="oppActionsTitle">Adversário</div>
+          <div class="actions">
+            <button data-side="opponent" data-event="Golo">Golo</button>
+            <button data-side="opponent" data-event="Remate">Remate</button>
+            <button data-side="opponent" data-event="Remate enquadrado">Remate enquadrado</button>
+            <button data-side="opponent" data-event="Falta">Falta</button>
+            <button class="timeout-btn warning" data-timeout-side="opponent">Timeout</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row space">
+            <h2>Eventos</h2>
+            <button id="undoEventBtn" class="ghost">Desfazer</button>
+          </div>
+          <div id="eventLog" class="event-log"></div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <button id="saveMatchBtn" class="primary">Guardar</button>
+            <button id="exportTimesBtn">CSV Tempos</button>
+            <button id="exportEventsBtn">CSV Eventos</button>
+            <button id="clearMatchBtn" class="danger">Limpar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTÓRICO -->
+<section id="historyView" class="view">
+  <div class="card">
+    <h2>Histórico</h2>
+    <div id="historyList"></div>
+  </div>
+</section>
+
+</main>
+
+<script src="core.js"></script>
+<script src="teams.js"></script>
+<script src="timing.js"></script>
+<script src="match.js"></script>
+<script src="events.js"></script>
+<script src="export.js"></script>
+<script src="history.js"></script>
+</body>
+</html>
