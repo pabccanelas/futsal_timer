@@ -49,7 +49,7 @@ function finalizePlayerState(p,m){
   if(p.status==="in"){
     p.accumulatedIn+=stint;
     ps.in+=stint;
-  }else{
+  }else if(p.status==="out"){
     p.accumulatedOut+=stint;
     ps.out+=stint;
   }
@@ -66,6 +66,7 @@ function resetStateStartForAll(m){
   });
 }
 function switchTwoPlayers(a,b,m){
+  if(a.status==="sentoff" || b.status==="sentoff") return false;
   if(a.status===b.status || m.phase==="finished") return false;
 
   finalizePlayerState(a,m);
@@ -99,6 +100,73 @@ function switchTwoPlayers(a,b,m){
   return true;
 }
 
+/* NUMERICAL REDUCTION AFTER A SENDING-OFF */
+function ensureNumericalState(m){
+  if(!Array.isArray(m.numericalPenalties)) m.numericalPenalties=[];
+  if(!Number.isFinite(m.pendingReplacements)) m.pendingReplacements=0;
+}
+function numericalPenaltyDuration(m){
+  return m.clockMode==="countdown" ? 120 : 180;
+}
+function activeNumericalPenalties(m){
+  ensureNumericalState(m);
+  return m.numericalPenalties.filter(p=>p.active);
+}
+function startNumericalPenalty(m,player){
+  ensureNumericalState(m);
+  const penalty={
+    id:uid(),
+    playerId:player.id,
+    playerName:player.name,
+    playerNumber:player.number,
+    duration:numericalPenaltyDuration(m),
+    remaining:numericalPenaltyDuration(m),
+    active:true,
+    startedPeriod:m.period,
+    startedClock:mainClockText(m),
+    endedReason:null
+  };
+  m.numericalPenalties.push(penalty);
+  return penalty.id;
+}
+function finishNumericalPenalty(m,penalty,reason){
+  if(!penalty || !penalty.active) return false;
+  penalty.active=false;
+  penalty.remaining=0;
+  penalty.endedReason=reason;
+  m.pendingReplacements=(m.pendingReplacements||0)+1;
+  return true;
+}
+function tickNumericalPenalties(m){
+  ensureNumericalState(m);
+  m.numericalPenalties.filter(p=>p.active).forEach(p=>{
+    p.remaining=Math.max(0,p.remaining-1);
+    if(p.remaining===0) finishNumericalPenalty(m,p,"time");
+  });
+}
+function releaseOldestNumericalPenalty(m,reason="goal"){
+  ensureNumericalState(m);
+  const penalty=m.numericalPenalties.find(p=>p.active);
+  if(!penalty) return false;
+  return finishNumericalPenalty(m,penalty,reason);
+}
+function removeNumericalPenalty(m,penaltyId){
+  ensureNumericalState(m);
+  const penalty=m.numericalPenalties.find(p=>p.id===penaltyId);
+  if(!penalty) return;
+  if(!penalty.active && m.pendingReplacements>0){
+    m.pendingReplacements=Math.max(0,m.pendingReplacements-1);
+  }
+  m.numericalPenalties=m.numericalPenalties.filter(p=>p.id!==penaltyId);
+}
+function restorePlayerAfterUndoRed(m,event){
+  const player=m.team.players.find(p=>p.id===event.playerId);
+  if(!player) return;
+  if(event.penaltyId) removeNumericalPenalty(m,event.penaltyId);
+  player.status=event.previousStatus || "out";
+  player.stateSincePlayerClock=event.playerClock;
+}
+
 /* MATCH CLOCK */
 function mainClockText(m){
   return formatSeconds(m.periodClockSeconds);
@@ -118,6 +186,7 @@ function tick(){
 
     if(m.clockMode==="countup" && m.timeout.wasRunning){
       m.periodClockSeconds++;
+      tickNumericalPenalties(m);
     }
 
     if(m.timeout.remaining<=0){
@@ -127,6 +196,7 @@ function tick(){
     updateClockDisplay();
     renderPlayerSections();
     renderTimeSummary();
+    renderNumericalPenalty();
 
     if(Date.now()%5<1000) saveCurrent();
     return;
@@ -136,10 +206,12 @@ function tick(){
     if(m.clockMode==="countup"){
       m.periodClockSeconds++;
       m.playerClockSeconds++;
+      tickNumericalPenalties(m);
     }else{
       if(m.periodClockSeconds>0){
         m.periodClockSeconds--;
         m.playerClockSeconds++;
+        tickNumericalPenalties(m);
       }
       if(m.periodClockSeconds<=0){
         m.periodClockSeconds=0;
@@ -150,6 +222,7 @@ function tick(){
     updateClockDisplay();
     renderPlayerSections();
     renderTimeSummary();
+    renderNumericalPenalty();
 
     if(m.playerClockSeconds%5===0) saveCurrent();
   }
