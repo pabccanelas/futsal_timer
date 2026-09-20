@@ -194,7 +194,8 @@
               <button data-side="tracked" data-event="Remate">REMATE</button>
               <button data-side="tracked" data-event="Remate enquadrado">ENQUADRADO</button>
               <button data-side="tracked" data-event="Falta">FALTA</button>
-              <button class="warning" data-timeout-side="tracked">TIMEOUT</button>
+              <button class="card-yellow" data-side="tracked" data-event="Cartão amarelo">AMARELO</button>
+              <button class="card-red" data-side="tracked" data-event="Cartão vermelho">VERMELHO</button>
             </div>
           </div>
 
@@ -205,7 +206,8 @@
               <button data-side="opponent" data-event="Remate">REMATE</button>
               <button data-side="opponent" data-event="Remate enquadrado">ENQUADRADO</button>
               <button data-side="opponent" data-event="Falta">FALTA</button>
-              <button class="warning" data-timeout-side="opponent">TIMEOUT</button>
+              <button class="card-yellow" data-side="opponent" data-event="Cartão amarelo">AMARELO</button>
+              <button class="card-red" data-side="opponent" data-event="Cartão vermelho">VERMELHO</button>
             </div>
           </div>
         </div>
@@ -232,6 +234,11 @@
           <button id="resumeBtn" class="good hidden">Retomar</button>
           <button id="periodControlBtn">Terminar 1ª parte</button>
           <button id="finishMatchBtn" class="danger">Terminar jogo</button>
+        </div>
+
+        <div class="timeout-controls">
+          <button id="ourTimeoutBtn" class="warning" data-timeout-side="tracked">Timeout Nossa Equipa</button>
+          <button id="oppTimeoutBtn" class="warning" data-timeout-side="opponent">Timeout Adversário</button>
         </div>
 
         <div id="timeoutStrip" class="timeout-strip"></div>
@@ -305,6 +312,19 @@
     </div>
   </div>
 </section>
+
+  <div id="playerEventModal" class="event-player-modal hidden" role="dialog" aria-modal="true">
+    <div class="event-player-dialog">
+      <div class="event-player-heading">
+        <div>
+          <div class="small muted">Selecionar jogador</div>
+          <h2 id="playerEventTitle">Evento</h2>
+        </div>
+        <button id="cancelPlayerEventBtn" class="ghost">Cancelar</button>
+      </div>
+      <div id="playerEventOptions" class="event-player-options"></div>
+    </div>
+  </div>
 
 <!-- HISTÓRICO -->
 <section id="historyView" class="view">
