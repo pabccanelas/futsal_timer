@@ -12,11 +12,16 @@ function renderMatch(){
   document.getElementById("ourActionsTitle").textContent=m.team.name;
   document.getElementById("oppActionsTitle").textContent=m.opponent.name;
   document.getElementById("modeBadge").textContent=clockModeLabel(m);
+  document.getElementById("listTrackedTeam").textContent=m.team.name;
+  document.getElementById("listOpponent").textContent=m.opponent.name;
+  document.getElementById("listScore").textContent=`${m.team.score} - ${m.opponent.score}`;
 
   updateClockDisplay();
   renderPlayerSections();
   renderTimeSummary();
+  renderMiniStats();
   renderEvents();
+  applyMatchLayout();
 }
 function phaseLabel(m){
   if(m.phase==="first_half") return "1ª Parte";
@@ -30,6 +35,8 @@ function updateClockDisplay(){
   if(!m) return;
 
   document.getElementById("clock").textContent=mainClockText(m);
+  document.getElementById("listClock").textContent=mainClockText(m);
+  document.getElementById("listScore").textContent=`${m.team.score} - ${m.opponent.score}`;
 
   let meta=`${phaseLabel(m)} · ${clockModeLabel(m)}`;
   if(m.timeout.active) meta+=" · jogadores congelados";
@@ -181,15 +188,62 @@ function renderTimeSummary(){
     .sort((a,b)=>a.number-b.number)
     .map(p=>`
       <tr>
-        <td>${p.number}</td>
+        <td><strong>#${p.number}</strong></td>
         <td>${esc(p.name)}</td>
-        <td class="${p.status==="in"?"status-in":"status-out"}">${p.status==="in"?"Em campo":"Fora"}</td>
-        <td>${formatSeconds(currentStint(p,m))}</td>
+        <td>${esc(p.position)}</td>
+        <td class="${p.status==="in"?"status-in":"status-out"}">${p.status==="in"?"Em campo":"Suplente"}</td>
+        <td>${formatSeconds(isLivePeriod(m)?currentStint(p,m):0)}</td>
+        <td>${formatSeconds(periodInNow(p,m,1))}</td>
+        <td>${formatSeconds(periodInNow(p,m,2))}</td>
         <td><strong>${formatSeconds(accumulatedInNow(p,m))}</strong></td>
         <td>${formatSeconds(accumulatedOutNow(p,m))}</td>
       </tr>
     `).join("");
 }
+
+function actionCount(m,side,type){
+  return m.events.filter(e=>e.kind==="teamAction" && e.side===side && e.type===type).length;
+}
+function timeoutCount(m,side){
+  return m.events.filter(e=>e.kind==="timeout" && e.side===side).length;
+}
+function renderMiniStats(){
+  const m=state.currentMatch;
+  const box=document.getElementById("miniStats");
+  if(!m || !box) return;
+
+  const rows=[
+    ["Remates",actionCount(m,"tracked","Remate"),actionCount(m,"opponent","Remate")],
+    ["Enquadrados",actionCount(m,"tracked","Remate enquadrado"),actionCount(m,"opponent","Remate enquadrado")],
+    ["Faltas",actionCount(m,"tracked","Falta"),actionCount(m,"opponent","Falta")],
+    ["Timeouts",timeoutCount(m,"tracked"),timeoutCount(m,"opponent")]
+  ];
+
+  box.innerHTML=rows.map(([label,ours,theirs])=>`
+    <div class="mini-stat-row">
+      <div class="mini-stat-value">${ours}</div>
+      <div class="mini-stat-label">${label}</div>
+      <div class="mini-stat-value">${theirs}</div>
+    </div>
+  `).join("");
+}
+
+function applyMatchLayout(){
+  const dashboard=document.getElementById("matchDashboardView");
+  const list=document.getElementById("matchListView");
+  const button=document.getElementById("toggleMatchLayoutBtn");
+  if(!dashboard || !list || !button) return;
+
+  const showList=state.matchLayout==="list";
+  dashboard.classList.toggle("hidden",showList);
+  list.classList.toggle("hidden",!showList);
+  button.textContent=showList?"Vista Painel":"Vista Lista";
+}
+
+document.getElementById("toggleMatchLayoutBtn").addEventListener("click",()=>{
+  state.matchLayout=state.matchLayout==="list"?"dashboard":"list";
+  applyMatchLayout();
+});
 
 /* CLOCK / PERIOD / GAME CONTROLS */
 document.getElementById("toggleClockBtn").addEventListener("click",()=>{
