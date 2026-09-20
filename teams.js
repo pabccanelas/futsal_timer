@@ -164,6 +164,8 @@ document.getElementById("createMatchBtn").addEventListener("click",()=>{
     running:false,
     awaitingResume:false,
     timeout:{active:false,remaining:0,calledBy:null,wasRunning:false},
+    numericalPenalties:[],
+    pendingReplacements:0,
     events:[],
     createdAt:new Date().toISOString()
   };
