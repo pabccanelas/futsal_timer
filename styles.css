@@ -855,3 +855,110 @@ button{
     min-height:50px;
   }
 }
+
+
+/* V9 — timeout controls and individual event picker */
+.timeout-controls{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(5px,.55vw,9px);
+  margin-top:8px;
+}
+.timeout-controls button{
+  min-width:0;
+  min-height:48px;
+  padding:7px 6px;
+  font-size:clamp(9px,.8vw,12px);
+  line-height:1.1;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.match-action-buttons{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.match-action-buttons button.card-yellow{
+  background:#f2c94c;
+  border-color:#f2c94c;
+  color:#1c1808;
+}
+.match-action-buttons button.card-red{
+  background:#d94a4a;
+  border-color:#d94a4a;
+  color:#fff;
+}
+
+.event-player-modal{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:clamp(10px,2vw,24px);
+  background:rgba(0,0,0,.72);
+}
+.event-player-dialog{
+  width:min(760px,96vw);
+  max-height:min(82dvh,760px);
+  overflow:auto;
+  background:#303030;
+  border:1px solid var(--match-border);
+  border-radius:22px;
+  padding:clamp(12px,1.5vw,20px);
+  box-shadow:0 18px 60px rgba(0,0,0,.45);
+}
+.event-player-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.event-player-heading h2{
+  margin:2px 0 0;
+}
+.event-player-options{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:9px;
+}
+.event-player-option{
+  min-height:64px;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:4px;
+  color:#101820;
+}
+.event-player-option strong{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.event-player-option span{
+  font-size:11px;
+  opacity:.78;
+}
+.event-player-option.is-court{
+  background:var(--court);
+  border-color:var(--court-strong);
+}
+.event-player-option.is-bench{
+  background:var(--bench);
+  border-color:var(--bench-strong);
+}
+
+@media (max-width:760px){
+  .timeout-controls{
+    grid-template-columns:1fr 1fr;
+  }
+  .event-player-options{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media (max-width:480px){
+  .event-player-options{
+    grid-template-columns:1fr;
+  }
+}
