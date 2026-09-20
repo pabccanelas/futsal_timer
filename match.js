@@ -24,6 +24,7 @@ function renderMatch(){
   renderPlayerSections();
   renderTimeSummary();
   renderMiniStats();
+  renderNumericalPenalty();
   renderEvents();
   applyMatchLayout();
 }
@@ -116,15 +117,65 @@ function updateClockDisplay(){
   });
 }
 
+function disciplineBadgesHtml(p,m){
+  const d=playerDiscipline(m,p.id);
+  if(!d.yellows && !d.red) return "";
+  const yellow=d.yellows ? `<span class="discipline-yellow">🟨${d.yellows>1?"×"+d.yellows:""}</span>` : "";
+  const red=d.red ? `<span class="discipline-red">🟥</span>` : "";
+  return `<span class="discipline-badges">${yellow}${red}</span>`;
+}
+
+function renderNumericalPenalty(){
+  const m=state.currentMatch;
+  const box=document.getElementById("numericalPenaltyStrip");
+  if(!m || !box) return;
+
+  ensureNumericalState(m);
+  const active=activeNumericalPenalties(m);
+
+  if(!active.length && !m.pendingReplacements){
+    box.innerHTML="";
+    return;
+  }
+
+  const penalties=active.map(p=>`
+    <div class="penalty-live">
+      <span>Inferioridade · #${p.playerNumber} ${esc(p.playerName)}</span>
+      <strong>${formatSeconds(p.remaining)}</strong>
+    </div>
+  `).join("");
+
+  const replacement=m.pendingReplacements>0
+    ? `<div class="replacement-ready">Pode entrar ${m.pendingReplacements} suplente${m.pendingReplacements>1?"s":""} · toca num suplente</div>`
+    : "";
+
+  const goalButton=active.length
+    ? `<button id="releasePenaltyGoalBtn" class="penalty-goal-btn">Terminou por golo sofrido</button>`
+    : "";
+
+  box.innerHTML=`<div class="numerical-penalty-box">${penalties}${replacement}${goalButton}</div>`;
+
+  document.getElementById("releasePenaltyGoalBtn")?.addEventListener("click",()=>{
+    const ok=confirm("Confirmar que a nossa equipa sofreu um golo e pode recompor um jogador?");
+    if(!ok) return;
+    releaseOldestNumericalPenalty(m,"goal-manual");
+    saveCurrent();
+    renderMatch();
+  });
+}
+
 function playerCardHtml(p,m){
   return `
     <div>
-      <div class="player-name">#${p.number} — ${esc(p.name)}</div>
-      <div class="player-pos">${esc(p.position)} · ${p.status==="in"?"EM CAMPO":"FORA"}</div>
+      <div class="player-name-row">
+        <div class="player-name">#${p.number} — ${esc(p.name)}</div>
+        ${disciplineBadgesHtml(p,m)}
+      </div>
+      <div class="player-pos">${esc(p.position)} · ${p.status==="in"?"EM CAMPO":(p.status==="sentoff"?"EXPULSO":"FORA")}</div>
     </div>
     <div class="metric-current">
       <div class="metric-label">Agora</div>
-      <div class="metric-value">${formatSeconds(isLivePeriod(m)?currentStint(p,m):0)}</div>
+      <div class="metric-value">${formatSeconds(isLivePeriod(m) && p.status!=="sentoff"?currentStint(p,m):0)}</div>
     </div>
     <div>
       <div class="metric-label">Campo</div>
@@ -151,11 +202,15 @@ function renderPlayerSections(){
     court.appendChild(btn);
   });
 
-  sorted.filter(p=>p.status==="out").forEach(p=>{
+  sorted.filter(p=>p.status!=="in").forEach(p=>{
     const btn=document.createElement("button");
-    btn.className="player-card out"+(state.selectedPlayerId===p.id?" selected":"");
+    btn.className="player-card "+(p.status==="sentoff"?"sentoff":"out")+(state.selectedPlayerId===p.id?" selected":"");
     btn.innerHTML=playerCardHtml(p,m);
-    btn.addEventListener("click",()=>selectPlayerForSub(p.id));
+    if(p.status!=="sentoff"){
+      btn.addEventListener("click",()=>selectPlayerForSub(p.id));
+    }else{
+      btn.disabled=true;
+    }
     bench.appendChild(btn);
   });
 
@@ -166,7 +221,38 @@ function selectPlayerForSub(id){
   const m=state.currentMatch;
   if(!m || m.phase==="finished") return;
   const clicked=m.team.players.find(p=>p.id===id);
-  if(!clicked) return;
+  if(!clicked || clicked.status==="sentoff") return;
+
+  ensureNumericalState(m);
+  if(m.pendingReplacements>0){
+    if(clicked.status!=="out"){
+      alert("A penalização terminou. Seleciona um suplente para recompor a equipa.");
+      return;
+    }
+
+    finalizePlayerState(clicked,m);
+    clicked.status="in";
+    clicked.substitutionsIn++;
+    clicked.stateSincePlayerClock=m.playerClockSeconds;
+    m.pendingReplacements=Math.max(0,m.pendingReplacements-1);
+
+    m.events.push({
+      id:uid(),
+      kind:"redReplacement",
+      period:m.period,
+      clockText:mainClockText(m),
+      playerClock:m.playerClockSeconds,
+      playerId:clicked.id,
+      playerName:clicked.name,
+      playerNumber:clicked.number,
+      timestamp:new Date().toISOString()
+    });
+
+    state.selectedPlayerId=null;
+    saveCurrent();
+    renderMatch();
+    return;
+  }
 
   if(!state.selectedPlayerId){
     state.selectedPlayerId=id;
@@ -205,10 +291,10 @@ function renderTimeSummary(){
     .map(p=>`
       <tr>
         <td><strong>#${p.number}</strong></td>
-        <td>${esc(p.name)}</td>
+        <td>${esc(p.name)} ${disciplineBadgesHtml(p,m)}</td>
         <td>${esc(p.position)}</td>
-        <td class="${p.status==="in"?"status-in":"status-out"}">${p.status==="in"?"Em campo":"Suplente"}</td>
-        <td>${formatSeconds(isLivePeriod(m)?currentStint(p,m):0)}</td>
+        <td class="${p.status==="in"?"status-in":(p.status==="sentoff"?"status-sentoff":"status-out")}">${p.status==="in"?"Em campo":(p.status==="sentoff"?"Expulso":"Suplente")}</td>
+        <td>${formatSeconds(isLivePeriod(m) && p.status!=="sentoff"?currentStint(p,m):0)}</td>
         <td>${formatSeconds(periodInNow(p,m,1))}</td>
         <td>${formatSeconds(periodInNow(p,m,2))}</td>
         <td><strong>${formatSeconds(accumulatedInNow(p,m))}</strong></td>
