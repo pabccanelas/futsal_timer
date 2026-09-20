@@ -11,6 +11,10 @@ function renderMatch(){
   document.getElementById("opponentScore").textContent=m.opponent.score;
   document.getElementById("ourActionsTitle").textContent=m.team.name;
   document.getElementById("oppActionsTitle").textContent=m.opponent.name;
+  const ourTimeoutBtn=document.getElementById("ourTimeoutBtn");
+  const oppTimeoutBtn=document.getElementById("oppTimeoutBtn");
+  if(ourTimeoutBtn) ourTimeoutBtn.textContent=`Timeout ${m.team.name}`;
+  if(oppTimeoutBtn) oppTimeoutBtn.textContent=`Timeout ${m.opponent.name}`;
   document.getElementById("modeBadge").textContent=clockModeLabel(m);
   document.getElementById("listTrackedTeam").textContent=m.team.name;
   document.getElementById("listOpponent").textContent=m.opponent.name;
@@ -216,6 +220,8 @@ function renderMiniStats(){
     ["Remates",actionCount(m,"tracked","Remate"),actionCount(m,"opponent","Remate")],
     ["Enquadrados",actionCount(m,"tracked","Remate enquadrado"),actionCount(m,"opponent","Remate enquadrado")],
     ["Faltas",actionCount(m,"tracked","Falta"),actionCount(m,"opponent","Falta")],
+    ["Amarelos",actionCount(m,"tracked","Cartão amarelo"),actionCount(m,"opponent","Cartão amarelo")],
+    ["Vermelhos",actionCount(m,"tracked","Cartão vermelho"),actionCount(m,"opponent","Cartão vermelho")],
     ["Timeouts",timeoutCount(m,"tracked"),timeoutCount(m,"opponent")]
   ];
 
