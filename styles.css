@@ -962,3 +962,22 @@ button{
     grid-template-columns:1fr;
   }
 }
+
+
+/* V10 — clearer player-event flow and early timeout finish */
+.timeout-live-with-action{
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.timeout-end-btn{
+  min-height:38px;
+  padding:6px 10px;
+  background:#f2a447;
+  border-color:#f2a447;
+  color:#17120a;
+  font-size:11px;
+  font-weight:850;
+}
+.event-player-heading h2{
+  font-size:clamp(18px,2vw,26px);
+}
