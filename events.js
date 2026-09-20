@@ -40,10 +40,21 @@ function openPlayerEventModal(type){
   const title=document.getElementById("playerEventTitle");
   const options=document.getElementById("playerEventOptions");
 
-  title.textContent=type;
+  const titles={
+    "Golo":"Quem marcou o golo?",
+    "Falta":"Quem fez a falta?",
+    "Cartão amarelo":"Quem recebeu o amarelo?",
+    "Cartão vermelho":"Quem recebeu o vermelho?"
+  };
+  title.textContent=titles[type] || type;
   options.innerHTML="";
 
-  const sorted=[...m.team.players].sort((a,b)=>{
+  const courtOnly = type==="Golo" || type==="Falta";
+  const available = courtOnly
+    ? m.team.players.filter(p=>p.status==="in")
+    : [...m.team.players];
+
+  const sorted=[...available].sort((a,b)=>{
     if(a.status!==b.status) return a.status==="in" ? -1 : 1;
     return Number(a.number)-Number(b.number);
   });
