@@ -107,15 +107,15 @@ function playerCardHtml(p,m){
       <div class="player-pos">${esc(p.position)} · ${p.status==="in"?"EM CAMPO":"FORA"}</div>
     </div>
     <div class="metric-current">
-      <div class="metric-label">${p.status==="in"?"Em campo há":"Fora há"}</div>
+      <div class="metric-label">Agora</div>
       <div class="metric-value">${formatSeconds(isLivePeriod(m)?currentStint(p,m):0)}</div>
     </div>
     <div>
-      <div class="metric-label">Acum. campo</div>
+      <div class="metric-label">Campo</div>
       <div class="metric-value">${formatSeconds(accumulatedInNow(p,m))}</div>
     </div>
     <div>
-      <div class="metric-label">Acum. fora</div>
+      <div class="metric-label">Fora</div>
       <div class="metric-value">${formatSeconds(accumulatedOutNow(p,m))}</div>
     </div>`;
 }
