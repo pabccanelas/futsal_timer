@@ -34,6 +34,16 @@ function phaseLabel(m){
   if(m.phase==="finished") return "Jogo terminado";
   return `${m.period===1?"1ª":"2ª"} Parte`;
 }
+function endTimeoutEarly(){
+  const m=state.currentMatch;
+  if(!m || !m.timeout?.active) return;
+
+  const ok=confirm("Terminar o timeout mais cedo?");
+  if(!ok) return;
+
+  finishTimeout(m);
+}
+
 function updateClockDisplay(){
   const m=state.currentMatch;
   if(!m) return;
@@ -81,10 +91,12 @@ function updateClockDisplay(){
   if(m.timeout.active){
     const who=m.timeout.calledBy==="tracked"?m.team.name:m.opponent.name;
     strip.innerHTML=`
-      <div class="timeout-live">
-        Timeout · ${esc(who)}
+      <div class="timeout-live timeout-live-with-action">
+        <span>Timeout · ${esc(who)}</span>
         <span class="timeout-clock">${formatSeconds(m.timeout.remaining)}</span>
+        <button id="endTimeoutEarlyBtn" class="timeout-end-btn">Terminar timeout</button>
       </div>`;
+    document.getElementById("endTimeoutEarlyBtn")?.addEventListener("click",endTimeoutEarly);
   }else if(m.awaitingResume){
     strip.innerHTML=`<div class="timeout-live">Timeout terminado · jogo parado</div>`;
   }else if(m.phase==="halftime"){
