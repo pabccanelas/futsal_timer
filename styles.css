@@ -718,3 +718,140 @@ button{
     min-height:30px;
   }
 }
+
+
+/* V8 — compact landscape player cards */
+.player-card{
+  grid-template-rows:auto 1fr;
+  align-items:stretch;
+}
+.player-card > div:not(:first-child){
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  min-width:0;
+}
+.player-card > div:not(:first-child) .metric-label,
+.player-card > div:not(:first-child) .metric-value{
+  text-align:left;
+}
+.player-card .metric-label{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Give court players enough width: about 45% / 55%. */
+.match-player-columns{
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+}
+
+/* Typical tablet landscape: compact cards without sacrificing touchability. */
+@media (min-width:760px) and (max-width:1200px) and (orientation:landscape){
+  .match-player-columns{
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+    gap:6px;
+  }
+
+  .player-card{
+    min-height:68px;
+    padding:7px 8px;
+    gap:4px;
+    border-radius:12px;
+  }
+
+  .player-card > div:first-child{
+    padding-bottom:4px;
+  }
+
+  .player-name{
+    font-size:clamp(12px,1.15vw,15px);
+    line-height:1;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .player-pos{
+    font-size:9px;
+    line-height:1.05;
+  }
+
+  .metric-label{
+    font-size:7px;
+    line-height:1;
+    letter-spacing:.15px;
+  }
+
+  .metric-value{
+    font-size:clamp(12px,1.1vw,15px);
+    line-height:1;
+    margin-top:3px;
+  }
+
+  .player-zone .section-title{
+    align-items:flex-start;
+    margin-bottom:5px;
+  }
+
+  .player-zone .section-title h3{
+    font-size:14px;
+  }
+
+  .player-zone .small{
+    font-size:9px;
+    line-height:1.15;
+  }
+
+  .player-zone .badge{
+    font-size:9px;
+    padding:3px 6px;
+  }
+
+  .player-list{
+    gap:5px;
+  }
+}
+
+/* Short landscape screens such as the screenshot: compress vertically further. */
+@media (max-height:720px) and (orientation:landscape){
+  .match-players-panel{
+    padding:7px;
+  }
+
+  .match-player-columns{
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+    gap:6px;
+  }
+
+  .player-card{
+    min-height:62px;
+    padding:6px 7px;
+  }
+
+  .player-name{
+    font-size:13px;
+  }
+
+  .player-pos{
+    font-size:8px;
+    margin-top:2px;
+  }
+
+  .metric-label{
+    font-size:7px;
+  }
+
+  .metric-value{
+    font-size:13px;
+    margin-top:2px;
+  }
+
+  .match-actions-block{
+    padding-top:7px;
+  }
+
+  .match-action-buttons button{
+    min-height:50px;
+  }
+}
