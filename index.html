@@ -18,8 +18,8 @@
 <header>
   <div class="brand">Futsal <span>Time Tracker</span></div>
   <nav>
-    <button class="nav-btn active" data-view="teamsView">Equipa</button>
     <button class="nav-btn" data-view="setupView">Novo Jogo</button>
+    <button class="nav-btn active" data-view="teamsView">Editar Equipas</button>
     <button class="nav-btn" data-view="matchView">Jogo</button>
     <button class="nav-btn" data-view="historyView">Histórico</button>
   </nav>
@@ -150,122 +150,156 @@
   <div id="noMatchNotice" class="card notice">Ainda não existe um jogo ativo.</div>
 
   <div id="matchArea" class="hidden">
-    <div class="card">
-      <div class="top-match">
-        <div>
-          <div id="trackedTeamName" class="team-name">Equipa</div>
-          <div id="trackedScore" class="score">0</div>
-        </div>
-
-        <div>
-          <div id="clock" class="clock">00:00</div>
-          <div id="clockMeta" class="clock-meta">1ª Parte</div>
-
-          <div class="row" style="justify-content:center">
-            <button id="toggleClockBtn" class="good" style="min-width:120px">Iniciar</button>
-            <button id="resumeBtn" class="good hidden" style="min-width:120px">Retomar</button>
-            <button id="periodControlBtn" style="min-width:150px">Terminar 1ª parte</button>
-            <button id="finishMatchBtn" class="danger" style="min-width:135px">Terminar jogo</button>
-          </div>
-
-          <div id="timeoutStrip" class="timeout-strip"></div>
-        </div>
-
-        <div>
-          <div id="opponentName" class="team-name">Adversário</div>
-          <div id="opponentScore" class="score">0</div>
-        </div>
+    <div class="match-viewbar">
+      <div class="match-viewbar-left">
+        <strong>Jogo</strong>
+        <span id="modeBadge" class="badge mode-badge">Modo</span>
       </div>
+      <button id="toggleMatchLayoutBtn" class="view-switch-btn">Vista Lista</button>
     </div>
 
-    <div class="workspace">
-
-      <!-- LEFT: TIMES ALWAYS VISIBLE -->
-      <div class="card">
-        <div class="row space" style="margin-bottom:12px">
-          <div>
-            <h2 style="margin:0">Tempos dos jogadores</h2>
-            <div class="small muted">Substituição: clica num jogador em campo e depois num do banco.</div>
-          </div>
-          <span id="modeBadge" class="badge mode-badge">Modo</span>
-        </div>
-
-        <div class="player-columns">
-          <div>
+    <div id="matchDashboardView" class="match-dashboard">
+      <section class="match-players-panel">
+        <div class="player-columns match-player-columns">
+          <div class="player-zone player-zone-court">
             <div class="section-title">
-              <h3>Em campo</h3>
+              <div>
+                <h3>Em campo</h3>
+                <div class="small muted">Seleciona para substituir</div>
+              </div>
               <span id="courtCount" class="badge">5 jogadores</span>
             </div>
             <div id="courtPlayers" class="player-list"></div>
           </div>
 
-          <div>
+          <div class="player-zone player-zone-bench">
             <div class="section-title">
-              <h3>Banco</h3>
-              <span class="badge">tempo fora</span>
+              <div>
+                <h3>Suplentes</h3>
+                <div class="small muted">Seleciona quem entra</div>
+              </div>
+              <span class="badge">Banco</span>
             </div>
             <div id="benchPlayers" class="player-list"></div>
           </div>
         </div>
 
-        <div class="table-wrap">
-          <table>
+        <div class="match-actions-block">
+          <h3>Ações</h3>
+
+          <div class="action-team-row">
+            <div id="ourActionsTitle" class="action-team-name">Nossa Equipa</div>
+            <div class="match-action-buttons">
+              <button data-side="tracked" data-event="Golo">GOLO</button>
+              <button data-side="tracked" data-event="Remate">REMATE</button>
+              <button data-side="tracked" data-event="Remate enquadrado">ENQUADRADO</button>
+              <button data-side="tracked" data-event="Falta">FALTA</button>
+              <button class="warning" data-timeout-side="tracked">TIMEOUT</button>
+            </div>
+          </div>
+
+          <div class="action-team-row">
+            <div id="oppActionsTitle" class="action-team-name">Adversário</div>
+            <div class="match-action-buttons">
+              <button data-side="opponent" data-event="Golo">GOLO</button>
+              <button data-side="opponent" data-event="Remate">REMATE</button>
+              <button data-side="opponent" data-event="Remate enquadrado">ENQUADRADO</button>
+              <button data-side="opponent" data-event="Falta">FALTA</button>
+              <button class="warning" data-timeout-side="opponent">TIMEOUT</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="match-score-panel">
+        <div id="clock" class="clock match-clock">00:00</div>
+        <div id="clockMeta" class="clock-meta">1ª Parte</div>
+
+        <div class="score-versus">
+          <div class="score-team">
+            <div id="trackedTeamName" class="team-name">Nossa Equipa</div>
+            <div id="trackedScore" class="score">0</div>
+          </div>
+          <div class="versus-mark">×</div>
+          <div class="score-team">
+            <div id="opponentName" class="team-name">Adversário</div>
+            <div id="opponentScore" class="score">0</div>
+          </div>
+        </div>
+
+        <div class="match-controls">
+          <button id="toggleClockBtn" class="good">Iniciar</button>
+          <button id="resumeBtn" class="good hidden">Retomar</button>
+          <button id="periodControlBtn">Terminar 1ª parte</button>
+          <button id="finishMatchBtn" class="danger">Terminar jogo</button>
+        </div>
+
+        <div id="timeoutStrip" class="timeout-strip"></div>
+
+        <div class="mini-stats-wrap">
+          <div class="mini-stats-title">Resumo</div>
+          <div id="miniStats" class="mini-stats"></div>
+        </div>
+      </section>
+
+      <aside class="match-events-panel">
+        <div class="events-heading">
+          <div>
+            <h3>Eventos</h3>
+            <div class="small muted">Mais recentes primeiro</div>
+          </div>
+          <button id="undoEventBtn" class="ghost">Desfazer</button>
+        </div>
+
+        <div id="eventLog" class="event-log"></div>
+
+        <div class="event-tools">
+          <button id="saveMatchBtn" class="primary">Guardar</button>
+          <button id="exportTimesBtn">CSV Tempos</button>
+          <button id="exportEventsBtn">CSV Eventos</button>
+          <button id="clearMatchBtn" class="danger">Limpar</button>
+        </div>
+      </aside>
+    </div>
+
+    <div id="matchListView" class="match-list-view hidden">
+      <div class="list-match-header">
+        <div>
+          <div class="small muted">Relógio</div>
+          <div id="listClock" class="list-clock">00:00</div>
+        </div>
+        <div class="list-scoreline">
+          <span id="listTrackedTeam">Nossa Equipa</span>
+          <strong id="listScore">0 - 0</strong>
+          <span id="listOpponent">Adversário</span>
+        </div>
+      </div>
+
+      <div class="card list-table-card">
+        <div class="section-title">
+          <div>
+            <h2 style="margin:0">Tempos dos jogadores</h2>
+            <div class="small muted">Vista detalhada por jogador e por parte</div>
+          </div>
+        </div>
+
+        <div class="table-wrap match-list-table-wrap">
+          <table class="match-list-table">
             <thead>
               <tr>
                 <th>#</th>
                 <th>Jogador</th>
+                <th>Posição</th>
                 <th>Estado</th>
                 <th>Estado atual</th>
-                <th>Acum. campo</th>
-                <th>Acum. fora</th>
+                <th>1ª P. campo</th>
+                <th>2ª P. campo</th>
+                <th>Total campo</th>
+                <th>Total fora</th>
               </tr>
             </thead>
             <tbody id="timeSummaryBody"></tbody>
           </table>
-        </div>
-      </div>
-
-      <!-- RIGHT: ACTIONS ALWAYS VISIBLE -->
-      <div class="workspace-right">
-        <div class="card">
-          <h2>Ações</h2>
-
-          <div class="team-actions-title" id="ourActionsTitle">Nossa equipa</div>
-          <div class="actions">
-            <button data-side="tracked" data-event="Golo">Golo</button>
-            <button data-side="tracked" data-event="Remate">Remate</button>
-            <button data-side="tracked" data-event="Remate enquadrado">Remate enquadrado</button>
-            <button data-side="tracked" data-event="Falta">Falta</button>
-            <button class="timeout-btn warning" data-timeout-side="tracked">Timeout</button>
-          </div>
-
-          <div class="sep"></div>
-
-          <div class="team-actions-title" id="oppActionsTitle">Adversário</div>
-          <div class="actions">
-            <button data-side="opponent" data-event="Golo">Golo</button>
-            <button data-side="opponent" data-event="Remate">Remate</button>
-            <button data-side="opponent" data-event="Remate enquadrado">Remate enquadrado</button>
-            <button data-side="opponent" data-event="Falta">Falta</button>
-            <button class="timeout-btn warning" data-timeout-side="opponent">Timeout</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="row space">
-            <h2>Eventos</h2>
-            <button id="undoEventBtn" class="ghost">Desfazer</button>
-          </div>
-          <div id="eventLog" class="event-log"></div>
-        </div>
-
-        <div class="card">
-          <div class="row">
-            <button id="saveMatchBtn" class="primary">Guardar</button>
-            <button id="exportTimesBtn">CSV Tempos</button>
-            <button id="exportEventsBtn">CSV Eventos</button>
-            <button id="clearMatchBtn" class="danger">Limpar</button>
-          </div>
         </div>
       </div>
     </div>
