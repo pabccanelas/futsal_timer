@@ -9,6 +9,7 @@ const state={
   editingTeamId:null,
   currentMatch:null,
   selectedPlayerId:null,
+  matchLayout:"dashboard",
   timer:null
 };
 
