@@ -981,3 +981,88 @@ button{
 .event-player-heading h2{
   font-size:clamp(18px,2vw,26px);
 }
+
+
+/* V11 — discipline badges and numerical reduction */
+.player-name-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  min-width:0;
+}
+.player-name-row .player-name{
+  min-width:0;
+  flex:1;
+}
+.discipline-badges{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  gap:2px;
+  font-size:clamp(11px,1vw,15px);
+  line-height:1;
+}
+.discipline-yellow,
+.discipline-red{
+  white-space:nowrap;
+}
+.player-card.sentoff{
+  background:#7a3030;
+  border-color:#c94b4b;
+  color:#fff;
+  opacity:.9;
+}
+.player-card.sentoff .player-name,
+.player-card.sentoff .player-pos,
+.player-card.sentoff .metric-label,
+.player-card.sentoff .metric-value{
+  color:#fff!important;
+}
+.player-card.sentoff:disabled{
+  opacity:.9;
+}
+.status-sentoff{
+  color:#ff7777;
+  font-weight:800;
+}
+
+.numerical-penalty-strip{
+  margin-top:8px;
+}
+.numerical-penalty-box{
+  display:grid;
+  gap:6px;
+  padding:8px;
+  border:1px solid #d94a4a;
+  background:#431f1f;
+  border-radius:12px;
+}
+.penalty-live{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  color:#ffd6d6;
+  font-size:clamp(10px,.9vw,13px);
+}
+.penalty-live strong{
+  font-size:clamp(15px,1.3vw,20px);
+  font-variant-numeric:tabular-nums;
+}
+.replacement-ready{
+  padding:7px 8px;
+  background:#163b25;
+  border:1px solid #2e8b57;
+  border-radius:9px;
+  color:#bff3cf;
+  font-size:clamp(10px,.9vw,13px);
+  font-weight:800;
+}
+.penalty-goal-btn{
+  min-height:42px;
+  padding:7px 9px;
+  background:#703434;
+  border-color:#a94c4c;
+  font-size:clamp(9px,.8vw,12px);
+}
