@@ -25,19 +25,19 @@ document.getElementById("exportTimesBtn").addEventListener("click",()=>{
   if(!m) return;
 
   const rows=[[
-    "numero",
+    "número",
     "jogador",
-    "posicao",
-    "tempo_campo_1_parte",
-    "tempo_fora_1_parte",
-    "tempo_campo_2_parte",
-    "tempo_fora_2_parte",
-    "tempo_campo_total",
-    "tempo_fora_total",
-    "estado_atual",
-    "tempo_estado_atual",
+    "posição",
+    "tempo campo 1ª parte",
+    "tempo fora 1ª parte",
+    "tempo campo 2ª parte",
+    "tempo fora 2ª parte",
+    "tempo campo total",
+    "tempo fora total",
+    "estado atual",
+    "tempo estado atual",
     "entradas",
-    "saidas"
+    "saídas"
   ]];
 
   [...m.team.players].sort((a,b)=>a.number-b.number).forEach(p=>{
@@ -59,7 +59,7 @@ document.getElementById("exportTimesBtn").addEventListener("click",()=>{
     ]);
   });
 
-  const csv=rows.map(r=>r.map(csvEscape).join(";")).join("\n");
+  const csv="\uFEFF"+rows.map(r=>r.map(csvEscape).join(";")).join("\r\n");
   download(
     `tempos_por_parte_${safeFileName(m.team.name)}_${m.date||"jogo"}.csv`,
     csv,
@@ -70,31 +70,33 @@ document.getElementById("exportEventsBtn").addEventListener("click",()=>{
   const m=state.currentMatch;
   if(!m) return;
 
-  const rows=[["periodo","relogio_jogo","tempo_jogadores","tipo","equipa","detalhe"]];
+  const rows=[["período","relógio jogo","tempo jogadores","tipo","equipa","número jogador","jogador","detalhe"]];
 
   m.events.forEach(e=>{
     if(e.kind==="substitution"){
       rows.push([
         e.period,e.clockText,formatSeconds(e.playerClock),
-        "Substituição",m.team.name,
+        "Substituição",m.team.name,"","",
         `Sai ${e.outPlayer}; Entra ${e.inPlayer}`
       ]);
     }else if(e.kind==="timeout"){
       rows.push([
         e.period,e.clockText,formatSeconds(e.playerClock),
-        "Timeout",e.side==="tracked"?m.team.name:m.opponent.name,"60 segundos"
+        "Timeout",e.side==="tracked"?m.team.name:m.opponent.name,"","","60 segundos"
       ]);
     }else{
       rows.push([
         e.period,e.clockText||"",formatSeconds(e.playerClock||0),
         e.type||e.kind,
         e.side==="tracked"?m.team.name:(e.side==="opponent"?m.opponent.name:""),
+        e.playerNumber??"",
+        e.playerName??"",
         ""
       ]);
     }
   });
 
-  const csv=rows.map(r=>r.map(csvEscape).join(";")).join("\n");
+  const csv="\uFEFF"+rows.map(r=>r.map(csvEscape).join(";")).join("\r\n");
   download(`eventos_${m.date||"jogo"}.csv`,csv,"text/csv;charset=utf-8");
 });
 document.getElementById("clearMatchBtn").addEventListener("click",()=>{
