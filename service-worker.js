@@ -1,4 +1,4 @@
-const CACHE_NAME = "futsal-timer-shell-v6";
+const CACHE_NAME = "futsal-timer-shell-v7";
 
 const APP_SHELL = [
   "./",
