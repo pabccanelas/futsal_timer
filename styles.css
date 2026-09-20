@@ -191,3 +191,530 @@ nav .nav-btn.active{background:#9fc7e8;border-color:#9fc7e8;color:#101820}
   .match-action-buttons{grid-template-columns:repeat(3,1fr)}
   .list-match-header{grid-template-columns:1fr}
 }
+
+
+/* V7 — responsive / device-independent layout */
+html{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+body{
+  width:100%;
+  min-height:100dvh;
+  overflow-x:hidden;
+}
+header,
+main,
+.view,
+#matchArea,
+.match-dashboard,
+.match-players-panel,
+.match-score-panel,
+.match-events-panel,
+.player-zone,
+.match-list-view{
+  min-width:0;
+}
+main{
+  width:100%;
+  padding:clamp(8px,1vw,16px);
+}
+header{
+  gap:clamp(8px,1vw,18px);
+  padding:clamp(8px,1vw,14px) clamp(10px,1.4vw,22px);
+}
+.brand{
+  font-size:clamp(16px,1.45vw,22px);
+  white-space:nowrap;
+}
+nav{
+  justify-content:flex-end;
+  gap:clamp(6px,.7vw,10px);
+}
+nav .nav-btn{
+  min-width:clamp(94px,9vw,138px);
+  min-height:48px;
+  padding:clamp(8px,.8vw,12px) clamp(10px,1vw,16px);
+  font-size:clamp(12px,1.05vw,16px);
+}
+
+button{
+  min-width:48px;
+  min-height:48px;
+}
+.match-viewbar{
+  gap:10px;
+  margin-bottom:clamp(6px,.7vw,10px);
+}
+.view-switch-btn{
+  min-width:clamp(120px,12vw,165px);
+  min-height:50px;
+  font-size:clamp(12px,1vw,15px);
+}
+
+/* Full dashboard: fluid 3-column layout, without rigid pixel minimums. */
+.match-dashboard{
+  width:100%;
+  grid-template-columns:
+    minmax(0,1.52fr)
+    minmax(240px,.72fr)
+    minmax(210px,.48fr);
+  gap:clamp(6px,.65vw,12px);
+  min-height:calc(100dvh - clamp(108px,10vh,140px));
+}
+.match-players-panel,
+.match-score-panel,
+.match-events-panel{
+  border-radius:clamp(16px,1.8vw,28px);
+}
+.match-players-panel{
+  padding:clamp(7px,.75vw,12px);
+}
+.match-player-columns{
+  grid-template-columns:minmax(0,.74fr) minmax(0,1.26fr);
+  gap:clamp(6px,.6vw,10px);
+}
+.player-zone .section-title{
+  gap:6px;
+}
+.player-zone h3{
+  font-size:clamp(13px,1.15vw,17px);
+}
+.small{
+  font-size:clamp(9px,.82vw,12px);
+}
+.badge{
+  font-size:clamp(9px,.78vw,11px);
+  padding:clamp(3px,.35vw,5px) clamp(6px,.55vw,9px);
+}
+
+/* Player cards shrink/reflow internally rather than forcing the page wider. */
+.player-list{
+  gap:clamp(5px,.5vw,8px);
+}
+.player-card{
+  width:100%;
+  min-width:0;
+  min-height:clamp(78px,9vh,100px);
+  padding:clamp(7px,.7vw,11px);
+  gap:clamp(4px,.45vw,7px);
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  border-radius:clamp(10px,1vw,14px);
+}
+.player-card > div{
+  min-width:0;
+}
+.player-name{
+  font-size:clamp(12px,1.05vw,16px);
+  line-height:1.12;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.player-pos{
+  font-size:clamp(8px,.72vw,10px);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.metric-label{
+  font-size:clamp(7px,.62vw,9px);
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+.metric-value{
+  font-size:clamp(12px,1.08vw,16px);
+  white-space:nowrap;
+}
+
+/* Action area: always touchable; columns adapt before buttons become tiny. */
+.match-actions-block{
+  padding-top:clamp(8px,.8vw,13px);
+}
+.match-actions-block > h3{
+  font-size:clamp(14px,1.2vw,18px);
+}
+.action-team-row{
+  grid-template-columns:minmax(78px,clamp(78px,7vw,110px)) minmax(0,1fr);
+  gap:clamp(5px,.5vw,8px);
+}
+.action-team-name{
+  min-width:0;
+  font-size:clamp(10px,.9vw,13px);
+  padding:0 clamp(4px,.5vw,8px);
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.match-action-buttons{
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:clamp(4px,.45vw,7px);
+}
+.match-action-buttons button{
+  min-width:0;
+  min-height:clamp(52px,6.7vh,68px);
+  padding:clamp(6px,.65vw,10px) clamp(3px,.4vw,6px);
+  font-size:clamp(10px,.86vw,14px);
+  line-height:1.08;
+  overflow-wrap:anywhere;
+}
+
+/* Score block scales with viewport while retaining touch targets. */
+.match-score-panel{
+  padding:clamp(14px,1.8vw,28px) clamp(10px,1.25vw,20px) clamp(12px,1.2vw,20px);
+}
+.match-clock{
+  font-size:clamp(38px,4.6vw,68px);
+}
+.clock-meta{
+  font-size:clamp(10px,.9vw,13px);
+}
+.score-versus{
+  gap:clamp(5px,.8vw,12px);
+  margin:clamp(12px,1.5vw,22px) 0 clamp(5px,.7vw,10px);
+}
+.team-name{
+  font-size:clamp(13px,1.45vw,22px);
+}
+.score{
+  font-size:clamp(27px,2.6vw,40px);
+  margin-top:clamp(4px,.7vw,10px);
+}
+.versus-mark{
+  font-size:clamp(16px,1.6vw,24px);
+}
+.match-controls{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(5px,.55vw,9px);
+  margin-top:clamp(8px,1vw,15px);
+}
+.match-controls button{
+  min-width:0;
+  min-height:clamp(50px,6vh,60px);
+  padding:clamp(7px,.7vw,11px) clamp(5px,.55vw,10px);
+  font-size:clamp(10px,.9vw,14px);
+  line-height:1.15;
+}
+.timeout-live{
+  max-width:100%;
+  font-size:clamp(10px,.85vw,13px);
+}
+.mini-stats-wrap{
+  margin-top:clamp(10px,1.2vw,18px);
+  padding-top:clamp(9px,1vw,15px);
+}
+.mini-stat-row{
+  grid-template-columns:clamp(38px,3.5vw,54px) minmax(0,1fr) clamp(38px,3.5vw,54px);
+  min-height:clamp(34px,4.5vh,42px);
+  padding:4px clamp(5px,.6vw,9px);
+}
+.mini-stat-value{
+  font-size:clamp(14px,1.2vw,18px);
+}
+.mini-stat-label{
+  font-size:clamp(8px,.72vw,11px);
+}
+
+/* Event pane remains usable even when narrow. */
+.match-events-panel{
+  padding:clamp(7px,.75vw,12px);
+}
+.events-heading{
+  gap:5px;
+}
+.events-heading h3{
+  font-size:clamp(14px,1.25vw,19px);
+}
+.events-heading button{
+  min-width:70px;
+  min-height:44px;
+  font-size:clamp(10px,.8vw,12px);
+}
+.event-log{
+  min-width:0;
+  min-height:clamp(220px,38vh,440px);
+}
+.event{
+  grid-template-columns:clamp(48px,4.2vw,64px) minmax(0,1fr);
+  gap:clamp(5px,.5vw,9px);
+  font-size:clamp(9px,.78vw,12px);
+}
+.event > div{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+.event-tools{
+  gap:clamp(5px,.5vw,8px);
+}
+.event-tools button{
+  min-width:0;
+  min-height:48px;
+  font-size:clamp(9px,.75vw,12px);
+}
+
+/* Detailed list is fluid. */
+.match-list-view{
+  width:100%;
+}
+.list-match-header{
+  grid-template-columns:minmax(120px,180px) minmax(0,1fr);
+  gap:clamp(8px,1vw,16px);
+  padding:clamp(10px,1.2vw,18px);
+}
+.list-clock{
+  font-size:clamp(30px,3.2vw,42px);
+}
+.list-scoreline{
+  min-width:0;
+  gap:clamp(8px,1.2vw,20px);
+  font-size:clamp(13px,1.35vw,19px);
+}
+.list-scoreline span{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.list-scoreline strong{
+  flex:0 0 auto;
+  font-size:clamp(20px,2.1vw,30px);
+}
+.match-list-table-wrap{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.match-list-table{
+  width:100%;
+  table-layout:fixed;
+}
+.match-list-table th,
+.match-list-table td{
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+.match-list-table th{
+  font-size:clamp(9px,.8vw,12px);
+}
+.match-list-table td{
+  font-size:clamp(11px,1vw,15px);
+  padding:clamp(8px,1vw,14px) clamp(5px,.7vw,9px);
+}
+
+/* Large desktop / large tablet */
+@media (min-width:1400px){
+  .match-dashboard{
+    grid-template-columns:minmax(0,1.6fr) minmax(320px,.78fr) minmax(250px,.5fr);
+  }
+}
+
+/* Typical tablets and small laptops, landscape: retain 3 columns. */
+@media (min-width:1000px) and (max-width:1399px){
+  .match-dashboard{
+    grid-template-columns:minmax(0,1.48fr) minmax(255px,.72fr) minmax(215px,.48fr);
+  }
+  .match-player-columns{
+    grid-template-columns:minmax(0,.76fr) minmax(0,1.24fr);
+  }
+  .match-action-buttons button{
+    min-height:54px;
+  }
+}
+
+/* Smaller landscape tablets: players + score remain together; events move below. */
+@media (min-width:760px) and (max-width:999px){
+  header{
+    position:sticky;
+  }
+  nav .nav-btn{
+    min-width:90px;
+  }
+  .match-dashboard{
+    grid-template-columns:minmax(0,1.45fr) minmax(250px,.72fr);
+  }
+  .match-events-panel{
+    grid-column:1 / -1;
+    min-height:0;
+  }
+  .event-log{
+    min-height:150px;
+    max-height:230px;
+  }
+  .event-tools{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+  .match-action-buttons{
+    grid-template-columns:repeat(5,minmax(0,1fr));
+  }
+}
+
+/* Portrait tablets: score first, players second, events last. */
+@media (orientation:portrait) and (min-width:600px) and (max-width:999px){
+  .match-dashboard{
+    grid-template-columns:1fr;
+  }
+  .match-score-panel{
+    order:1;
+  }
+  .match-players-panel{
+    order:2;
+  }
+  .match-events-panel{
+    order:3;
+    grid-column:auto;
+  }
+  .match-player-columns{
+    grid-template-columns:1fr 1fr;
+  }
+  .score-versus{
+    max-width:620px;
+    width:100%;
+    align-self:center;
+  }
+  .match-controls{
+    max-width:620px;
+    width:100%;
+    align-self:center;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+  .mini-stats-wrap{
+    max-width:620px;
+    width:100%;
+    align-self:center;
+  }
+}
+
+/* Phones / very narrow windows */
+@media (max-width:759px){
+  header{
+    position:static;
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .brand{
+    text-align:center;
+  }
+  nav{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    width:100%;
+  }
+  nav .nav-btn{
+    width:100%;
+    min-width:0;
+  }
+  .match-viewbar{
+    position:sticky;
+    top:0;
+    z-index:20;
+    padding:6px;
+    margin:0 0 7px;
+    background:#242424;
+  }
+  .match-dashboard{
+    grid-template-columns:1fr;
+    min-height:0;
+  }
+  .match-score-panel{
+    order:1;
+  }
+  .match-players-panel{
+    order:2;
+  }
+  .match-events-panel{
+    order:3;
+    grid-column:auto;
+  }
+  .match-player-columns{
+    grid-template-columns:1fr 1fr;
+  }
+  .action-team-row{
+    grid-template-columns:1fr;
+  }
+  .match-action-buttons{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  .match-action-buttons button{
+    min-height:54px;
+  }
+  .event-log{
+    min-height:160px;
+    max-height:240px;
+  }
+  .event-tools{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .list-match-header{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+  .list-scoreline{
+    flex-wrap:wrap;
+  }
+
+  /* Hide lower-priority list columns on narrow screens. */
+  .match-list-table th:nth-child(3),
+  .match-list-table td:nth-child(3),
+  .match-list-table th:nth-child(9),
+  .match-list-table td:nth-child(9){
+    display:none;
+  }
+}
+
+/* Very narrow phones: stack court / bench rather than making cards too small. */
+@media (max-width:520px){
+  .match-player-columns{
+    grid-template-columns:1fr;
+  }
+  .match-controls{
+    grid-template-columns:1fr 1fr;
+  }
+  .match-action-buttons{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .player-card{
+    min-height:86px;
+  }
+
+  .match-list-table th:nth-child(6),
+  .match-list-table td:nth-child(6),
+  .match-list-table th:nth-child(7),
+  .match-list-table td:nth-child(7){
+    display:none;
+  }
+}
+
+/* Short screens (common on landscape phones/small tablets): compress vertical spacing, not touch targets. */
+@media (max-height:650px) and (orientation:landscape){
+  main{
+    padding-top:6px;
+    padding-bottom:6px;
+  }
+  .match-viewbar{
+    margin-bottom:5px;
+  }
+  .match-dashboard{
+    min-height:calc(100dvh - 98px);
+  }
+  .player-card{
+    min-height:72px;
+  }
+  .match-score-panel{
+    padding-top:12px;
+    padding-bottom:10px;
+  }
+  .score-versus{
+    margin-top:8px;
+  }
+  .mini-stats-wrap{
+    margin-top:8px;
+    padding-top:7px;
+  }
+  .mini-stats{
+    gap:4px;
+  }
+  .mini-stat-row{
+    min-height:30px;
+  }
+}
