@@ -13,6 +13,8 @@ Aplicação web para controlo de tempos de utilização de jogadores de futsal d
 - exportação CSV com tempos por parte e totais
 - armazenamento local no browser (`localStorage`)
 - interface pensada para tablet
+- PWA instalável no ecrã principal
+- funcionamento offline depois da primeira visita online
 
 ## Estrutura
 
@@ -25,6 +27,9 @@ Aplicação web para controlo de tempos de utilização de jogadores de futsal d
 - `events.js` — eventos
 - `export.js` — persistência e exportações CSV
 - `history.js` — histórico e arranque da aplicação
+- `manifest.webmanifest` — configuração da PWA
+- `service-worker.js` — cache e funcionamento offline
+- `icons/` — ícones da aplicação
 
 ## Publicação
 
@@ -33,3 +38,12 @@ O projeto pode ser publicado diretamente com GitHub Pages a partir da branch `ma
 ## Nota sobre dados
 
 Os dados são guardados localmente no browser/dispositivo. Não existe ainda sincronização entre dispositivos.
+
+## Instalação como aplicação
+
+Depois de publicar com GitHub Pages, abre a aplicação uma vez com internet.
+
+- Android/Chrome: usa **Instalar aplicação** ou **Adicionar ao ecrã principal**.
+- iPad/iPhone/Safari: usa **Partilhar → Adicionar ao ecrã principal**.
+
+O service worker guarda a aplicação para utilização offline. Os dados dos jogos continuam a ser guardados localmente no dispositivo.
