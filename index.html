@@ -43,7 +43,13 @@
       </div>
     </div>
     <div class="card">
-      <h2>Equipas guardadas</h2>
+      <div class="row space teams-card-header">
+        <div>
+          <h2>Equipas guardadas</h2>
+          <div class="small muted">Guardadas neste dispositivo</div>
+        </div>
+        <button id="openImportTeamBtn">Importar equipa</button>
+      </div>
       <div id="teamsList"></div>
     </div>
   </div>
@@ -54,7 +60,10 @@
         <h2 id="editingTeamTitle">Seleciona uma equipa</h2>
         <div class="small muted">Os tempos individuais são registados apenas para esta equipa.</div>
       </div>
-      <button id="deleteTeamBtn" class="danger hidden">Eliminar equipa</button>
+      <div class="row team-editor-actions">
+        <button id="shareTeamBtn" class="primary hidden">Partilhar equipa</button>
+        <button id="deleteTeamBtn" class="danger hidden">Eliminar equipa</button>
+      </div>
     </div>
 
     <div id="playerEditorArea" class="hidden">
@@ -327,6 +336,56 @@
     </div>
   </div>
 
+  <div id="shareTeamModal" class="team-transfer-modal hidden" role="dialog" aria-modal="true">
+    <div class="team-transfer-dialog">
+      <div class="row space team-transfer-heading">
+        <div>
+          <div class="small muted">Partilhar entre dispositivos</div>
+          <h2 id="shareTeamTitle">Partilhar equipa</h2>
+        </div>
+        <button id="closeShareTeamBtn" class="ghost">Fechar</button>
+      </div>
+
+      <div class="share-team-body">
+        <div id="shareTeamQr" class="share-team-qr" aria-label="QR Code da equipa"></div>
+        <div class="share-team-info">
+          <div id="shareTeamSummary" class="team-transfer-summary"></div>
+          <p class="small muted">O QR e o link incluem apenas nome, número e posição dos jogadores. Não incluem jogos, tempos ou cartões.</p>
+          <div class="share-team-actions">
+            <button id="nativeShareTeamBtn" class="primary">Partilhar</button>
+            <button id="copyShareTeamLinkBtn">Copiar link</button>
+          </div>
+          <div id="shareTeamFeedback" class="small transfer-feedback"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="importTeamModal" class="team-transfer-modal hidden" role="dialog" aria-modal="true">
+    <div class="team-transfer-dialog import-team-dialog">
+      <div class="row space team-transfer-heading">
+        <div>
+          <div class="small muted">Receber equipa</div>
+          <h2>Importar equipa</h2>
+        </div>
+        <button id="closeImportTeamBtn" class="ghost">Fechar</button>
+      </div>
+
+      <div id="importTeamSummary" class="team-transfer-summary hidden"></div>
+
+      <div id="manualImportArea">
+        <label>Cola o link da equipa</label>
+        <textarea id="teamImportInput" rows="4" placeholder="Cola aqui o link recebido por WhatsApp, email, etc."></textarea>
+        <div id="importTeamError" class="small import-error"></div>
+      </div>
+
+      <div class="row team-import-actions">
+        <button id="importTeamConfirmBtn" class="primary" disabled>Importar equipa</button>
+        <button id="clearImportTeamBtn" class="ghost">Limpar</button>
+      </div>
+    </div>
+  </div>
+
 <!-- HISTÓRICO -->
 <section id="historyView" class="view">
   <div class="card">
@@ -338,6 +397,7 @@
 </main>
 
 <script src="core.js"></script>
+<script src="vendor/qrcode.min.js"></script>
 <script src="teams.js"></script>
 <script src="timing.js"></script>
 <script src="match.js"></script>
