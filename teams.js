@@ -43,6 +43,7 @@ function renderTeamEditor(){
   }
 
   document.getElementById("editingTeamTitle").textContent=team.name;
+  document.getElementById("editingTeamNameInput").value=team.name;
   area.classList.remove("hidden");
   del.classList.remove("hidden");
   share.classList.remove("hidden");
@@ -76,6 +77,45 @@ document.getElementById("createTeamBtn").addEventListener("click",()=>{
   input.value="";
   saveTeams();renderTeams();renderTeamEditor();
 });
+document.getElementById("saveTeamNameBtn").addEventListener("click",()=>{
+  const team=state.teams.find(t=>t.id===state.editingTeamId);
+  if(!team) return;
+
+  const input=document.getElementById("editingTeamNameInput");
+  const newName=input.value.trim();
+
+  if(!newName) return alert("Indica o nome da equipa.");
+
+  const duplicate=state.teams.some(t=>
+    t.id!==team.id &&
+    t.name.trim().toLocaleLowerCase("pt-PT")===newName.toLocaleLowerCase("pt-PT")
+  );
+  if(duplicate) return alert("Já existe uma equipa com esse nome.");
+
+  team.name=newName;
+
+  if(state.currentMatch?.team?.id===team.id){
+    state.currentMatch.team.name=newName;
+    saveCurrent();
+  }
+
+  saveTeams();
+  renderTeams();
+  renderTeamEditor();
+  renderSetup();
+
+  if(state.currentMatch?.team?.id===team.id){
+    renderMatch();
+  }
+});
+
+document.getElementById("editingTeamNameInput").addEventListener("keydown",(e)=>{
+  if(e.key==="Enter"){
+    e.preventDefault();
+    document.getElementById("saveTeamNameBtn").click();
+  }
+});
+
 document.getElementById("deleteTeamBtn").addEventListener("click",()=>{
   const team=state.teams.find(t=>t.id===state.editingTeamId);
   if(!team) return;
