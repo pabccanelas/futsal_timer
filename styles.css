@@ -1195,3 +1195,31 @@ button{
     flex:1;
   }
 }
+
+
+/* V13 — team rename */
+.team-rename-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:9px;
+  align-items:end;
+  padding:12px;
+  margin-top:14px;
+  background:#252525;
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+.team-rename-row .field{
+  min-width:0;
+}
+.team-rename-row button{
+  min-width:130px;
+}
+@media(max-width:560px){
+  .team-rename-row{
+    grid-template-columns:1fr;
+  }
+  .team-rename-row button{
+    width:100%;
+  }
+}
