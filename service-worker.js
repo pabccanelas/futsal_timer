@@ -1,10 +1,11 @@
-const CACHE_NAME = "futsal-timer-shell-v7";
+const CACHE_NAME = "futsal-timer-shell-v8";
 
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./core.js",
+  "./vendor/qrcode.min.js",
   "./teams.js",
   "./timing.js",
   "./match.js",
