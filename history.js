@@ -31,6 +31,7 @@ function renderHistory(){
 }
 
 load();
+handleIncomingTeamShare();
 renderTeams();
 renderTeamEditor();
 renderSetup();
