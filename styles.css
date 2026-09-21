@@ -1066,3 +1066,132 @@ button{
   border-color:#a94c4c;
   font-size:clamp(9px,.8vw,12px);
 }
+
+
+/* V12 — simple team sharing/import */
+.teams-card-header h2{
+  margin-bottom:3px;
+}
+.team-list-actions,
+.team-editor-actions{
+  flex-wrap:nowrap;
+}
+.team-list-actions button{
+  min-height:42px;
+  padding:7px 10px;
+}
+.team-transfer-modal{
+  position:fixed;
+  inset:0;
+  z-index:300;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:clamp(10px,2vw,24px);
+  background:rgba(0,0,0,.76);
+}
+.team-transfer-dialog{
+  width:min(760px,96vw);
+  max-height:min(90dvh,820px);
+  overflow:auto;
+  background:#303030;
+  border:1px solid var(--match-border);
+  border-radius:22px;
+  padding:clamp(14px,1.7vw,22px);
+  box-shadow:0 18px 60px rgba(0,0,0,.48);
+}
+.team-transfer-heading{
+  margin-bottom:14px;
+}
+.team-transfer-heading h2{
+  margin:2px 0 0;
+}
+.share-team-body{
+  display:grid;
+  grid-template-columns:minmax(220px,260px) minmax(0,1fr);
+  gap:clamp(14px,2vw,24px);
+  align-items:center;
+}
+.share-team-qr{
+  width:260px;
+  max-width:100%;
+  min-height:260px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
+  margin:auto;
+  background:#fff;
+  border-radius:16px;
+}
+.share-team-qr img,
+.share-team-qr canvas{
+  display:block;
+  width:100%!important;
+  height:auto!important;
+  max-width:240px;
+}
+.share-team-info{
+  min-width:0;
+}
+.team-transfer-summary{
+  padding:12px 14px;
+  margin-bottom:12px;
+  background:#252525;
+  border:1px solid #4b5563;
+  border-radius:12px;
+  font-size:17px;
+}
+.share-team-actions,
+.team-import-actions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:14px;
+}
+.share-team-actions button,
+.team-import-actions button{
+  min-width:0;
+}
+.transfer-feedback{
+  min-height:18px;
+  margin-top:8px;
+  color:#9fc7e8;
+  font-weight:700;
+}
+.import-team-dialog textarea{
+  width:100%;
+  resize:vertical;
+  min-height:96px;
+  padding:11px;
+  background:#181818;
+  color:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  font:inherit;
+}
+.import-team-dialog textarea:focus{
+  border-color:#9fc7e8;
+  outline:none;
+}
+.import-error{
+  min-height:18px;
+  margin-top:6px;
+  color:#ff8c8c;
+}
+
+@media(max-width:620px){
+  .share-team-body{
+    grid-template-columns:1fr;
+  }
+  .share-team-qr{
+    width:min(260px,82vw);
+    min-height:0;
+  }
+  .team-editor-actions{
+    width:100%;
+  }
+  .team-editor-actions button{
+    flex:1;
+  }
+}
