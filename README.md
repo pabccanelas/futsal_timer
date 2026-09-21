@@ -12,6 +12,8 @@ Aplicação web para controlo de tempos de utilização de jogadores de futsal d
 - registo de ações coletivas das duas equipas
 - exportação CSV com tempos por parte e totais
 - armazenamento local no browser (`localStorage`)
+- partilha de equipas por QR Code ou link, sem conta nem servidor
+- importação de equipas noutro dispositivo
 - interface pensada para tablet
 - PWA instalável no ecrã principal
 - funcionamento offline depois da primeira visita online
@@ -37,7 +39,11 @@ O projeto pode ser publicado diretamente com GitHub Pages a partir da branch `ma
 
 ## Nota sobre dados
 
-Os dados são guardados localmente no browser/dispositivo. Não existe ainda sincronização entre dispositivos.
+Os dados são guardados localmente no browser/dispositivo. Não existe sincronização automática entre dispositivos.
+
+As equipas podem ser transferidas por QR Code ou link. O conteúdo partilhado inclui apenas o nome da equipa e a lista de jogadores (número, nome e posição). Os dados são codificados no próprio link e não são enviados para um backend da aplicação.
+
+A geração local de QR Code usa a biblioteca open-source QRCode.js (MIT), incluída em `vendor/`.
 
 ## Instalação como aplicação
 
