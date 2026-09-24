@@ -1,5 +1,6 @@
 /* EVENTS */
 const PLAYER_EVENTS = new Set(["Golo","Falta","Cartão amarelo","Cartão vermelho"]);
+const SELECTED_PLAYER_EVENTS = new Set(["Remate","Remate enquadrado"]);
 let pendingPlayerEvent=null;
 
 function getPlayerYellowCount(m,playerId){
@@ -81,6 +82,26 @@ function maybeReleaseForOpponentGoal(){
   if(ok){
     releaseOldestNumericalPenalty(m,"goal");
   }
+}
+
+function recordSelectedPlayerAction(type){
+  const m=state.currentMatch;
+  if(!m) return;
+
+  if(!state.selectedPlayerId){
+    recordTeamAction("tracked",type,null);
+    return;
+  }
+
+  const player=m.team.players.find(p=>p.id===state.selectedPlayerId);
+
+  if(!player || player.status!=="in"){
+    alert("Para associar o remate, seleciona primeiro um jogador que esteja em campo.");
+    return;
+  }
+
+  state.selectedPlayerId=null;
+  recordTeamAction("tracked",type,player);
 }
 
 function recordTeamAction(side,type,player=null){
@@ -221,6 +242,11 @@ document.querySelectorAll("[data-side][data-event]").forEach(btn=>{
 
     if(side==="tracked" && PLAYER_EVENTS.has(type)){
       openPlayerEventModal(type);
+      return;
+    }
+
+    if(side==="tracked" && SELECTED_PLAYER_EVENTS.has(type)){
+      recordSelectedPlayerAction(type);
       return;
     }
 
