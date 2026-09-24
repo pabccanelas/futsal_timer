@@ -84,19 +84,41 @@ function maybeReleaseForOpponentGoal(){
   }
 }
 
-function recordSelectedPlayerAction(type){
+function handleSelectedTrackedAction(type){
   const m=state.currentMatch;
   if(!m) return;
 
+  const allowsCollective=SELECTED_PLAYER_EVENTS.has(type);
+
   if(!state.selectedPlayerId){
-    recordTeamAction("tracked",type,null);
+    if(allowsCollective){
+      recordTeamAction("tracked",type,null);
+      return;
+    }
+
+    alert("Seleciona primeiro o jogador e depois a ação.");
     return;
   }
 
   const player=m.team.players.find(p=>p.id===state.selectedPlayerId);
+  if(!player || player.status==="sentoff"){
+    alert("Seleciona um jogador válido.");
+    return;
+  }
 
-  if(!player || player.status!=="in"){
-    alert("Para associar o remate, seleciona primeiro um jogador que esteja em campo.");
+  const mustBeOnCourt =
+    type==="Golo" ||
+    type==="Falta" ||
+    type==="Remate" ||
+    type==="Remate enquadrado";
+
+  if(mustBeOnCourt && player.status!=="in"){
+    alert("Para esta ação, seleciona um jogador que esteja em campo.");
+    return;
+  }
+
+  if(type==="Cartão amarelo" || type==="Cartão vermelho"){
+    handleTrackedPlayerEvent(type,player);
     return;
   }
 
@@ -139,6 +161,7 @@ function handleTrackedPlayerEvent(type,player){
 
     const group=uid();
     sendOffTrackedPlayer(player,"direct",group);
+    state.selectedPlayerId=null;
     saveCurrent();
     closePlayerEventModal();
     renderMatch();
@@ -158,6 +181,7 @@ function handleTrackedPlayerEvent(type,player){
       const group=uid();
       pushTeamAction("tracked","Cartão amarelo",player,{actionGroupId:group});
       sendOffTrackedPlayer(player,"secondYellow",group);
+      state.selectedPlayerId=null;
       saveCurrent();
       closePlayerEventModal();
       renderMatch();
@@ -165,6 +189,7 @@ function handleTrackedPlayerEvent(type,player){
     }
 
     pushTeamAction("tracked","Cartão amarelo",player);
+    state.selectedPlayerId=null;
     saveCurrent();
     closePlayerEventModal();
     renderMatch();
@@ -240,13 +265,8 @@ document.querySelectorAll("[data-side][data-event]").forEach(btn=>{
     const side=btn.dataset.side;
     const type=btn.dataset.event;
 
-    if(side==="tracked" && PLAYER_EVENTS.has(type)){
-      openPlayerEventModal(type);
-      return;
-    }
-
-    if(side==="tracked" && SELECTED_PLAYER_EVENTS.has(type)){
-      recordSelectedPlayerAction(type);
+    if(side==="tracked" && (PLAYER_EVENTS.has(type) || SELECTED_PLAYER_EVENTS.has(type))){
+      handleSelectedTrackedAction(type);
       return;
     }
 
