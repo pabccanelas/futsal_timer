@@ -119,8 +119,9 @@ function jpgTeamEventCount(m,side,type){
 function jpgPlayerCards(m,playerId){
   const yellows=jpgEventCount(m,"Cartão amarelo",playerId);
   const reds=jpgEventCount(m,"Cartão vermelho",playerId);
-  if(reds) return "2A/V";
-  if(yellows>=2) return "2A/V";
+  if(reds && yellows>=2) return "2A/V";
+  if(reds) return "V";
+  if(yellows>=2) return "2A";
   if(yellows===1) return "A";
   return "—";
 }
