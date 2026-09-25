@@ -1223,3 +1223,14 @@ button{
     width:100%;
   }
 }
+
+
+/* V14 — JPG export */
+.event-tools .export-jpg{
+  background:#465f72;
+  border-color:#58778f;
+  color:#fff;
+}
+.event-tools .export-jpg:hover{
+  background:#527086;
+}
